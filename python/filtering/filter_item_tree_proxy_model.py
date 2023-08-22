@@ -9,11 +9,9 @@
 # not expressly granted therein are reserved by Autodesk Inc.
 
 import sgtk
-from sgtk.platform.qt import QtCore, QtGui
 
 from .filter_item import FilterItem
 
-# from ..models import HierarchicalFilteringProxyModel
 models = sgtk.platform.current_bundle().import_module("models")
 
 
@@ -66,8 +64,10 @@ class FilterItemTreeProxyModel(models.HierarchicalFilteringProxyModel):
         if emit_signal:
             # Invalidate the filter to apply the new filters to the model.
             self.layoutAboutToBeChanged.emit()
-            self.invalidateFilter()
-            self.layoutChanged.emit()
+            try:
+                self.invalidateFilter()
+            finally:
+                self.layoutChanged.emit()
 
     def _is_row_accepted(self, src_row, src_parent_idx, parent_accepted):
         """
