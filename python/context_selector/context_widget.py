@@ -1215,7 +1215,7 @@ def _get_context_icon_path(context):
 
 def _query_my_tasks():
     """
-    Called via bg task to query SG for tasks assigned to the current user.
+    Called via bg task to query PTR for tasks assigned to the current user.
     """
 
     bundle = sgtk.platform.current_bundle()
