@@ -113,7 +113,7 @@ class FilterItem(object):
         )
 
         # A mapping of data types to the basic set of filter types defined here, to keep a small
-        # consistent set of types. This is mostly for mapping SG data types.
+        # consistent set of types. This is mostly for mapping PTR data types.
         MAP_TYPES = {
             "text": STR,
             "status_list": STR,
@@ -242,8 +242,8 @@ class FilterItem(object):
     def filter_type(self, value):
         """
         Process the value to be set as the filter's type. This is to ensure the simplist set of
-        filter types; for example, SG has its own set of "types" for SG data, this method will
-        ensure the SG data type is mapped to the appropriate filter type.
+        filter types; for example, PTR has its own set of "types" for PTR data, this method will
+        ensure the PTR data type is mapped to the appropriate filter type.
         """
 
         if value not in (self.FilterType.VALID_TYPES):
@@ -480,12 +480,12 @@ class FilterItem(object):
     @classmethod
     def map_from_sg_data_type(cls, sg_data_type):
         """
-        Map the SG data type to a valid filter type.
+        Map the PTR data type to a valid filter type.
 
-        :param sg_data_type: The SG data type.
+        :param sg_data_type: The PTR data type.
         :type sg_data_type: str
 
-        :return: The corresponding filter type for the SG data type.
+        :return: The corresponding filter type for the PTR data type.
         :rtype: str
         """
 
@@ -652,7 +652,7 @@ class FilterItem(object):
         if filter_func is None:
             return False  # Invalid filter type
 
-        return filter_func(data)
+        return filter_func(self._sanitize_filter_value(data))
 
     def is_bool_valid(self, value):
         """
@@ -866,6 +866,20 @@ class FilterItem(object):
         )
         return False
 
+    def validate_search(self, search):
+        """
+        Check if the filter item matches the search value.
+
+        :param search: The search value.
+        :type search: any
+
+        :return: True if the filter item's value matches the search value, else False.
+        """
+        search = self._sanitize_filter_value(search)
+        if search == self._filter_value:
+            return True
+        return False
+
     def set_filter_value(self, value):
         """
         Set the filter item's filter value.
@@ -947,6 +961,8 @@ class FilterItem(object):
             if not isinstance(value, six.string_types):
                 # Just coerce it to string type.
                 value = str(value)
+            # make sure to lower the string to make it case insensitive
+            value = value.lower()
 
         elif self.filter_type == self.FilterType.NUMBER:
             if isinstance(value, six.string_types):

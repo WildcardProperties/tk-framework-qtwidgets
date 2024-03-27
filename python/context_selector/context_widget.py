@@ -13,8 +13,6 @@ import sgtk
 from sgtk.platform.qt import QtCore, QtGui
 from .ui.context_editor_widget import Ui_ContextWidget
 
-from collections import OrderedDict
-
 # framework imports
 shotgun_globals = sgtk.platform.import_framework(
     "tk-framework-shotgunutils", "shotgun_globals"
@@ -28,7 +26,7 @@ shotgun_menus = sgtk.platform.current_bundle().import_module("shotgun_menus")
 logger = sgtk.platform.get_logger(__name__)
 
 # fields required to create a context from a task entity without falling back to
-# a SG query
+# a PTR query
 TASK_QUERY_FIELDS = ["type", "id", "content", "project", "entity", "step"]
 
 
@@ -99,7 +97,11 @@ class ContextWidget(QtGui.QWidget):
         self.ui = Ui_ContextWidget()
         self.ui.setupUi(self)
 
-
+        # Loads the style sheet for the widget
+        qss_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "style.qss")
+        with open(qss_file, "rt") as f:
+            # apply to widget (and all its children)
+            self.setStyleSheet(f.read())
         self._initialize_task_statuses = True
         self._status_permissions = {}
         #self._complex_populate_status_display()
@@ -749,6 +751,13 @@ class ContextWidget(QtGui.QWidget):
         """
         bundle = sgtk.platform.current_bundle()
         context = bundle.sgtk.context_from_entity(entity_type, entity_id)
+
+        # Ensure the entity name is set within in the context. In some cases, e.g. for custom
+        # entities, the context retrieved does not have the entity name. We have the entity
+        # name here, so just set it.
+        if "name" not in context.entity and entity_name:
+            context.entity["name"] = entity_name
+
         self._on_context_activated(context)
 
     def _on_task_search_toggled(self, checked):
@@ -1003,6 +1012,7 @@ class ContextWidget(QtGui.QWidget):
         """
         Show the supplied context in the UI.
         """
+
         if task_display_override:
             task_display = task_display_override
         else:
@@ -1015,7 +1025,6 @@ class ContextWidget(QtGui.QWidget):
 
         # update the task display/state
         self.ui.task_display.setText(task_display)
-
         self.ui.task_search_btn.setChecked(False)
         self.ui.task_search_btn.setDown(False)
 
@@ -1241,7 +1250,7 @@ def _query_my_tasks():
 
 def _query_entity_schema(entity_type, field_name):
     """
-    Called as bg task to query SG for the field schema
+    Called as bg task to query PTR for the field schema
     for the given type and field.
 
     :param str entity_type: Entity type to query schema for
