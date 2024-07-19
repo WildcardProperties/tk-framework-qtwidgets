@@ -60,7 +60,7 @@ class BubbleWidget(QtGui.QFrame):
         # extract a close button icon from the style and use it
         self.remove_button = QtGui.QPushButton(self)
         style = self.remove_button.style()
-        icon = style.standardIcon(style.SP_TitleBarCloseButton)
+        icon = style.standardIcon(QtGui.QStyle.SP_TitleBarCloseButton)
         self.remove_button.setIcon(icon)
         self.remove_button.setFlat(True)
         self.remove_button.setStyleSheet("border: none")
@@ -68,7 +68,7 @@ class BubbleWidget(QtGui.QFrame):
         # placeholder for the bubble's image
         self.image_label = QtGui.QLabel(self)
 
-        # color the text to use the SG highlight color
+        # color the text to use the PTR highlight color
         text_color = QtGui.QColor(
             sgtk.platform.current_bundle().style_constants["SG_HIGHLIGHT_COLOR"]
         )
