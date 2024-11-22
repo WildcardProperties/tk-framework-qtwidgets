@@ -261,7 +261,7 @@ class ContextWidget(QtGui.QWidget):
             task_display_override=task_display_override,
             link_display_override=link_display_override,
         )
-        self._show_status(context)
+        #self._show_status(context)
         # ensure the new context is added to the list of recents.
         if context:
             self._add_to_recents(context)
@@ -289,7 +289,7 @@ class ContextWidget(QtGui.QWidget):
         #self.ui.task_display.textchanged.connect(self._task_display_update)
 
         # Update task status
-        self.ui.status_display.currentIndexChanged.connect(self._save_task_status)
+        #self.ui.status_display.currentIndexChanged.connect(self._save_task_status)
 
         # setup the search toggle
         self.ui.link_search_btn.toggled.connect(self._on_link_search_toggled)
@@ -741,7 +741,7 @@ class ContextWidget(QtGui.QWidget):
         # update the widget to display the new context and alert listeners that
         # a new context was selected
         self._show_context(context)
-        self._show_status(context)
+        #self._show_status(context)
         self.context_changed.emit(context)
 
 
