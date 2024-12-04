@@ -129,14 +129,16 @@ class ContextWidget(QtGui.QWidget):
         """
         Display the publish name widget
         """
-        self.ui.publish_name_label.show()
-        self.ui.publish_name_display.show()
-        self.ui.publish_token_label.show()
-        self.ui.publish_token_display.show()
+        #self.ui.publish_name_label.show()
+        #self.ui.publish_name_display.show()
+        #self.ui.publish_token_label.show()
+        #self.ui.publish_token_display.show()
+        pass
 
     def set_publish_name(self, publish_name):
-        self.ui.publish_name_display.setText(publish_name)
-        self.ui.publish_name_display.setCursorPosition(0)
+        #self.ui.publish_name_display.setText(publish_name)
+        #self.ui.publish_name_display.setCursorPosition(0)
+        pass
 
     def eventFilter(self, widget, event):
         """
